@@ -24,10 +24,10 @@ typedef struct arrecife{
 arrecife_t* crear_arrecife(const char* ruta_archivo[]) {
     FILE* archivo = fopen(ruta_archivo, "r");
 
-    if (archivo = NULL) {ERROR}
+    if (archivo == NULL) {ERROR}
 //        printf("ERROR de lectura.");
-//    arrecife_t* nuevo_pokemon = malloc(sizeof(arrecife_t);
-    arre
+    arrecife_t* nuevo_pokemon = malloc(sizeof(arrecife_t);
+
     int feof(FILE* archivo);
 
     while (!feof(archivo)){
@@ -37,7 +37,8 @@ arrecife_t* crear_arrecife(const char* ruta_archivo[]) {
 
     strcpy(nuevo_pokemon->pokemon, *pokemon);
     nuevo_pokemon->cantidad_pokemon, cantidad_pokemon;
+    
     fclose(archivo);
-    free();
-    return ;//puntero
+    free(nuevo_pokemon);
+    return nuevo_pokemon;//puntero
 }
