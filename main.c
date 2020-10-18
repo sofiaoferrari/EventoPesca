@@ -2,6 +2,8 @@
 #include <stdlib.h>
 
 int main() {
-    simulacion_arrecife = crear_arrecife("arrecife.txt") //(&archivo)
+    const char ARCHIVO[] = "arrecife.txt";
+    
+    void* simulacion_arrecife = crear_arrecife(ARCHIVO); //(&archivo)
     return 0;
 }
