@@ -21,6 +21,8 @@ typedef struct arrecife{
 } arrecife_t;
 */
 
+#define FORMATO [^%s];
+
 arrecife_t* crear_arrecife(const char* ruta_archivo[]) {
     FILE* archivo = fopen(*ruta_archivo, "r");
 
@@ -42,5 +44,5 @@ arrecife_t* crear_arrecife(const char* ruta_archivo[]) {
     
     fclose(archivo);
     free(nuevo_pokemon);
-    return *arrecife_t;   //puntero
+    return *arrecife_t;   //puntero arrecife
 }
