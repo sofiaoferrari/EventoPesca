@@ -58,6 +58,7 @@ arrecife_t* crear_arrecife(const char* ruta_archivo) {
             }
             arrecife->cantidad_pokemon, &leidos;
             fclose(archivo);
+            free(arrecife);
         }       
     }
 
@@ -69,6 +70,6 @@ arrecife_t* crear_arrecife(const char* ruta_archivo) {
 
 // strcpy(arrecife->pokemon, &pokemon);
     
-    free(arrecife);
+    
     return arrecife;   //puntero arrecife
 }
