@@ -22,38 +22,53 @@ typedef struct arrecife{
 */
 
 #define FORMATO_LECTURA "%[^;];%i;%i;%[^\n]\n"
+#define FORMATO_ESCRITURA "%s;%i;%i;%s\n"
+#define FORMATO_EXTENSION "%[^.].%s"
 
-arrecife_t* crear_arrecife(const char* ruta_archivo[]) {
-    FILE* archivo = fopen(*ruta_archivo, "r");
-    arrecife_t* nuevo_poke = malloc(sizeof(arrecife_t));
 
-    if (archivo == NULL) {
-        printf("ERROR de lectura.");
-        return -1;
+arrecife_t* crear_arrecife(const char* ruta_archivo) {
+    char nombre_archivo[50];
+    char extension[20];
+    sscanf(ruta_archivo, FORMATO_EXTENSION, nombre_archivo, extension);
+    
+    arrecife_t* arrecife = NULL;
+    arrecife = malloc(sizeof(arrecife_t));
+    if (arrecife == NULL) return NULL;
+
+    if (strcmp(extension, "txt") == 0) {
+        FILE* archivo = fopen(ruta_archivo, "r");
+        if (archivo == NULL){
+            printf("ERROR de lectura.");
+            fclose(archivo);
+            free(arrecife);
+            return NULL;
+        } else {
+            int leidos = fscanf(archivo, FORMATO_LECTURA,
+                        arrecife->pokemon->especie,
+                        &arrecife->pokemon->peso,
+                        &arrecife->pokemon->velocidad,
+                        arrecife->pokemon->color);
+                
+            while (leidos != EOF){
+                fprintf(archivo, FORMATO_ESCRITURA,
+                arrecife->pokemon->especie,
+                arrecife->pokemon->peso,
+                arrecife->pokemon->velocidad,
+                arrecife->pokemon->color);
+            }
+            arrecife->cantidad_pokemon, &leidos;
+            fclose(archivo);
+        }       
     }
 
-    int leidos = fscanf(archivo, FORMATO_LECTURA,
-                        nuevo_poke->pokemon->especie,
-                        &nuevo_poke->pokemon->peso,
-                        &nuevo_poke->pokemon->velocidad,
-                        nuevo_poke->pokemon->color);
+    
 
 //    int feof(FILE* archivo);
 //    fread();
 //    fscanf();
 
-    while (leidos != EOF){
-        fprintf(archivo, FORMATO_LECTURA,
-                nuevo_poke->pokemon->especie,
-                &nuevo_poke->pokemon->peso,
-                &nuevo_poke->pokemon->velocidad,
-                nuevo_poke->pokemon->color);
-    }
-
-// strcpy(nuevo_poke->pokemon, &pokemon);
-    nuevo_poke->cantidad_pokemon, &leidos;
+// strcpy(arrecife->pokemon, &pokemon);
     
-    fclose(archivo);
-    free(nuevo_poke);
-    return *arrecife_t;   //puntero arrecife
+    free(arrecife);
+    return arrecife;   //puntero arrecife
 }
