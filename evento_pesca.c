@@ -64,12 +64,9 @@ arrecife_t* crear_arrecife(const char* ruta_archivo) {
 
     
 
-//    int feof(FILE* archivo);
-//    fread();
-//    fscanf();
 
 // strcpy(arrecife->pokemon, &pokemon);
     
     
-    return arrecife;   //puntero arrecife
+    return arrecife;  
 }
