@@ -31,15 +31,17 @@ arrecife_t* crear_arrecife(const char* ruta_archivo) {
     char extension[20];
     sscanf(ruta_archivo, FORMATO_EXTENSION, nombre_archivo, extension);
     
-    arrecife_t* arrecife = NULL;
-    arrecife = malloc(sizeof(arrecife_t));
+    arrecife_t* arrecife = malloc(sizeof(arrecife_t));
     if (arrecife == NULL) return NULL;
+    arrecife->pokemon = malloc(sizeof(pokemon_t));
+    if (arrecife->pokemon == NULL) return NULL;
 
     if (strcmp(extension, "txt") == 0) {
         FILE* archivo = fopen(ruta_archivo, "r");
         if (archivo == NULL){
             printf("ERROR de lectura.");
             fclose(archivo);
+            free(arrecife->pokemon);
             free(arrecife);
             return NULL;
         } else {
@@ -58,7 +60,6 @@ arrecife_t* crear_arrecife(const char* ruta_archivo) {
             }
             arrecife->cantidad_pokemon, &leidos;
             fclose(archivo);
-            free(arrecife);
         }       
     }
 
