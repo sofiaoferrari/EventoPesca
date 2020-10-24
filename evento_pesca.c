@@ -33,8 +33,16 @@ arrecife_t* crear_arrecife(const char* ruta_archivo) {
     
     arrecife_t* arrecife = malloc(sizeof(arrecife_t));
     if (arrecife == NULL) return NULL;
-    arrecife->pokemon = malloc(sizeof(pokemon_t));
-    if (arrecife->pokemon == NULL) return NULL;
+    arrecife->cantidad_pokemon = 0;
+    arrecife->pokemon = NULL;
+    //if (arrecife->pokemon == NULL) return NULL;
+    
+
+    pokemon_t* aux_pokemon = malloc(sizeof(pokemon_t));
+    if (aux_pokemon == NULL) {
+        free(arrecife);
+        return NULL;
+    }
 
     if (strcmp(extension, "txt") == 0) {
         FILE* archivo = fopen(ruta_archivo, "r");
