@@ -23,10 +23,28 @@ typedef struct arrecife{
 
 #define FORMATO_LECTURA "%100[^;];%i;%i;%50[^\n]\n"
 #define FORMATO_ESCRITURA "%s;%i;%i;%s\n"
+#define CANT_CAMPOS 4
+
+void liberar_arrecife(arrecife_t* arrecife){
+    if((arrecife->pokemon) != NULL){
+        free(arrecife->pokemon);
+    }
+    if (arrecife != NULL){
+        free(arrecife);
+    }
+}
+
+void liberar_acuario(acuario_t* acuario) {
+    if (acuario != NULL){
+        free(acuario);
+    }
+}
 
 /*
+
 int trasladar_pokemon(arrecife_t* arrecife, acuario_t* acuario, bool (*seleccionar_pokemon) (pokemon_t*), int cant_seleccion) {
     return 0; //si sale todo bien, sino -1
+
 }
 */
 
@@ -34,46 +52,46 @@ acuario_t* crear_acuario() {
     acuario_t* acuario = malloc(sizeof(acuario_t));
     if (!acuario) {
         printf("ERROR de reserva de memoria.");
-        free(acuario);
         return NULL;
     }
     return acuario;
 }
 
-int numero_de_pokes(arrecife_t* arrecife) {
-    size_t n = (sizeof(*arrecife->pokemon)) / (sizeof(arrecife->pokemon[0]));
-    printf("Pokemones en arrecife:\n");
-    for (int i = 0; i > (int)n; i++) {
-        printf(FORMATO_ESCRITURA,
-                arrecife[i].pokemon->especie,
-                arrecife->pokemon[i].peso,
-                arrecife->pokemon[i].velocidad,
-                arrecife->pokemon[i].color);
-    }
-   return n;
+void capturar_datos(pokemon_t* poke_agregado, pokemon_t* poke_datos){
+    strcpy(poke_agregado->especie, poke_datos->especie);
+    poke_agregado->peso = poke_datos->peso;
+    poke_agregado->velocidad = poke_datos->velocidad;
+    strcpy(poke_agregado->color, poke_datos->color);
 }
 
-pokemon_t* insertar_pokes(FILE* archivo){
-    pokemon_t* aux_pokemon = malloc(sizeof(pokemon_t));
-    if (!aux_pokemon){
-        free(aux_pokemon);
-        printf("Problema cc memoria");
-        return NULL;
-    }
-    int poke_datos = fscanf(archivo, FORMATO_LECTURA,
-                    aux_pokemon->especie,
-                    &aux_pokemon->peso,
-                    &aux_pokemon->velocidad,
-                    aux_pokemon->color);
+int leer_archivo(FILE* archivo, arrecife_t* arrecife){
+    pokemon_t nuevo_poke;
 
-    if (poke_datos != 4) {
-        printf("Formato invalido");
-        free(aux_pokemon);
-        return NULL;
-    }
-    
+    size_t i = 0;
+    int campos = fscanf(archivo, FORMATO_LECTURA,
+                        nuevo_poke.especie,
+                        &nuevo_poke.peso,
+                        &nuevo_poke.velocidad,
+                        nuevo_poke.color);    
 
-    return aux_pokemon;
+    while (campos == CANT_CAMPOS) {
+        pokemon_t* aux_pokemon = realloc(arrecife->pokemon, sizeof(pokemon_t) * (i+1));
+        if (!aux_pokemon){
+            printf("Problema cc realloc \n");
+            return -1;
+        }
+        arrecife->pokemon = aux_pokemon;
+        i++;
+        arrecife->cantidad_pokemon = (int)i;
+        capturar_datos(&(arrecife->pokemon[i-1]), &nuevo_poke);
+        campos = fscanf(archivo, FORMATO_LECTURA,
+                        nuevo_poke.especie,
+                        &nuevo_poke.peso,
+                        &nuevo_poke.velocidad,
+                        nuevo_poke.color);
+        
+    }
+    return 0;
 
 }
 
@@ -81,7 +99,7 @@ arrecife_t* crear_arrecife(const char* ruta_archivo) {
     
     arrecife_t* arrecife = malloc(sizeof(arrecife_t));
     if (!arrecife) {
-        printf("ERROR de reserva de memoria.");
+        printf("ERROR de reserva de memoria.\n");
         return NULL;
     } 
     arrecife->cantidad_pokemon = 0;
@@ -89,21 +107,21 @@ arrecife_t* crear_arrecife(const char* ruta_archivo) {
    
     FILE* archivo = fopen(ruta_archivo, "r");
     if (!archivo){
-        printf("ERROR de lectura.");
+        printf("ERROR de lectura del archivo %s.\n", ruta_archivo);
         fclose(archivo);
         return NULL;
     }
 
-    arrecife->pokemon = insertar_pokes(archivo);
+    int hay_pokes = leer_archivo(archivo, arrecife);
     fclose(archivo);
-    arrecife->cantidad_pokemon = numero_de_pokes(arrecife->pokemon);
+    if ((hay_pokes == 0) && (arrecife->cantidad_pokemon > 0)){
+        printf("\nEXITO! El arrecife contiene %d pokemones :)\n", arrecife->cantidad_pokemon);
+    } else if (arrecife->cantidad_pokemon == 0) {
+        printf("\nHubo un ERROR, no se puedo crear el arrecife :(\n");
+        return NULL;
+    }
     
     printf("\nel primer poke es: %s\n", arrecife->pokemon[0].especie);
-    if (arrecife->cantidad_pokemon > 0){
-        printf("\nHay %d pokemones!\n", arrecife->cantidad_pokemon);
-    } else {
-        printf("\nNo hay pokes :(");
-    }
     
     return arrecife;  
 }
