@@ -24,7 +24,6 @@ typedef struct arrecife{
 #define FORMATO_LECTURA "%100[^;];%i;%i;%50[^\n]\n"
 #define FORMATO_ESCRITURA "%s;%i;%i;%s\n"
 #define CANT_CAMPOS 4
-#define AZULES 16
 
 void liberar_arrecife(arrecife_t* arrecife){
     if((arrecife->pokemon) != NULL){
@@ -36,16 +35,44 @@ void liberar_arrecife(arrecife_t* arrecife){
 }
 
 void liberar_acuario(acuario_t* acuario) {
+    if((acuario->pokemon) != NULL){
+        free(acuario->pokemon);
+    }
     if (acuario != NULL){
         free(acuario);
     }
 }
 
-bool verificar_traslado(arrecife_t* arrecife, int pokes_total, int cant_seleccion, bool (*seleccionar_pokemon) (pokemon_t*)) {
+int chequear_info_traslado(arrecife_t* arrecife, int cant_seleccion, int pokes_total) {
+     if ((!arrecife) && (cant_seleccion != 0)) {
+         printf("aca");
+         return -1;
+     }
+     if ((!arrecife) && (cant_seleccion == 0)) {
+         printf("2");
+         return 0;
+     }
+     if (cant_seleccion > pokes_total){
+         printf("\nBro no hay %d pokemones en el arrecife\n", cant_seleccion);
+         return -1;
+     }
+    return 2;
+}
+
+void capturar_datos(pokemon_t* poke_agregado, pokemon_t* poke_datos){
+    strcpy(poke_agregado->especie, poke_datos->especie);
+    poke_agregado->peso = poke_datos->peso;
+    poke_agregado->velocidad = poke_datos->velocidad;
+    strcpy(poke_agregado->color, poke_datos->color);
+}
+
+bool verificar_traslado(arrecife_t* arrecife, int pokes_total, int cant_seleccion, bool (*seleccionar_pokemon)(pokemon_t*)) {
     int encontrados = 0;
     for (int i = 0; i < pokes_total ; i++){
         bool poke_cumple = seleccionar_pokemon(&arrecife->pokemon[i]);
         if (poke_cumple && (encontrados < cant_seleccion)){
+            lista[encontrados] += i;
+            printf("posicion poke %d: %d (%d)", encontrados+1,lista[encontrados],i);
             encontrados++;
         }
         if (encontrados == cant_seleccion){
@@ -62,17 +89,15 @@ bool verificar_traslado(arrecife_t* arrecife, int pokes_total, int cant_seleccio
 
 
 int trasladar_pokemon(arrecife_t* arrecife, acuario_t* acuario, bool (*seleccionar_pokemon) (pokemon_t*), int cant_seleccion) {
-     int pokes_total = arrecife->cantidad_pokemon;
-     if ((!arrecife) && (cant_seleccion != 0)) return -1;
-     if ((!arrecife) && (cant_seleccion == 0)) return 0;
-     if (cant_seleccion > pokes_total){
-         printf("\nBro no hay %d pokemones en el arrecife\n", cant_seleccion);
-         return -1;
-     }
+    int pokes_total = arrecife->cantidad_pokemon;
+    
+    int continuar = chequear_info_traslado(arrecife, cant_seleccion, pokes_total);
+    if ((continuar == 0) || (continuar == -1)) 
+        return continuar;
     bool hay_suficientes = verificar_traslado(arrecife, pokes_total, cant_seleccion, (*seleccionar_pokemon));
+    if (hay_suficientes) return 0;
     
-    
-    return hay_suficientes;
+    return 0;
 }
 
 
@@ -82,15 +107,10 @@ acuario_t* crear_acuario() {
         printf("\nERROR de reserva de memoria.\n");
         return NULL;
     }
+    acuario->pokemon = NULL;
     return acuario;
 }
 
-void capturar_datos(pokemon_t* poke_agregado, pokemon_t* poke_datos){
-    strcpy(poke_agregado->especie, poke_datos->especie);
-    poke_agregado->peso = poke_datos->peso;
-    poke_agregado->velocidad = poke_datos->velocidad;
-    strcpy(poke_agregado->color, poke_datos->color);
-}
 
 int leer_archivo(FILE* archivo, arrecife_t* arrecife){
     pokemon_t nuevo_poke;

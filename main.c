@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define FOFOS 15
+#define FOFOS 20
 #define AZULES 5
 
 /*
@@ -23,13 +23,10 @@ bool pokefofos(arrecife_t* arrecife){
 */
 
 bool pokeveloz_azul(pokemon_t* poke_veloz){
-    
     bool azul = strcmp(poke_veloz->color, "azul");
-    bool fofo = (poke_veloz->peso >= FOFOS); 
-    if (azul && fofo){
-        printf("%s es azul y fofo", poke_veloz->especie);
-    }
-    return (azul && fofo);
+    bool fofo = (poke_veloz->peso <= FOFOS); 
+
+    return (!azul && !fofo);
 }
 
 
@@ -38,7 +35,7 @@ int main() {
     arrecife_t* simulacion_arrecife = crear_arrecife(ARCHIVO); 
     acuario_t* simulacion_acuario = crear_acuario();
     int traslado_1 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,(*pokeveloz_azul),AZULES);
-    if (traslado_1){
+    if (!traslado_1){
         printf("se pudo realizar el primer traslado");
     } else if (traslado_1 == 0){
         printf("se pudo");
