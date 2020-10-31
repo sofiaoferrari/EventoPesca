@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define FOFOS 15
-#define AZULES 16
+#define AZULES 5
 
 /*
 bool exclusivos_shellder_y_(){
@@ -22,38 +22,29 @@ bool pokefofos(arrecife_t* arrecife){
 }
 */
 
-bool pokeveloz_azul(arrecife_t* arrecife){
-    int encontrados = 0;
-    int pokes_total = arrecife->cantidad_pokemon;
-    for (int i = 0; i > pokes_total ; i++){
-        int distintas = strcmp(arrecife->pokemon[pokes_total].color, "azul");
-        if (!distintas) {
-            encontrados++;
-            printf("\nVan %d encontrados", encontrados);
-        }   
-        if (encontrados == AZULES) {
-            printf("Hay suficientes pokes azules p trasladar :)");
-            return true;
-        } 
+bool pokeveloz_azul(pokemon_t* poke_veloz){
+    
+    bool azul = strcmp(poke_veloz->color, "azul");
+    bool fofo = (poke_veloz->peso >= FOFOS); 
+    if (azul && fofo){
+        printf("%s es azul y fofo", poke_veloz->especie);
     }
-
-    return false;
+    return (azul && fofo);
 }
-
 
 
 int main() {
     const char ARCHIVO[] = "arrecife.txt";
     arrecife_t* simulacion_arrecife = crear_arrecife(ARCHIVO); 
     acuario_t* simulacion_acuario = crear_acuario();
-    bool seleccion = *(pokeveloz_azul(arrecife_t* arrecife))(simulacion_arrecife);
-    if (seleccion){
-        printf("\n%d pokes listos para ser trasladados", AZULES);
-    } else if (!seleccion) {
-        printf("\nNo se puede trasladar :(");
+    int traslado_1 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,(*pokeveloz_azul),AZULES);
+    if (traslado_1){
+        printf("se pudo realizar el primer traslado");
+    } else if (traslado_1 == 0){
+        printf("se pudo");
     }
+
     /*
-    int traslado_1 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,pokeveloz_azul(simulacion_arrecife),AZULES);
     int traslado_2 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,pokefofos(simulacion_arrecife),4);
     int traslado_3 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,pokefofos(simulacion_arrecife),30);
     int traslado_4 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,pokefofos(simulacion_arrecife),45);

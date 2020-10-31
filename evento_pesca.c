@@ -24,6 +24,7 @@ typedef struct arrecife{
 #define FORMATO_LECTURA "%100[^;];%i;%i;%50[^\n]\n"
 #define FORMATO_ESCRITURA "%s;%i;%i;%s\n"
 #define CANT_CAMPOS 4
+#define AZULES 16
 
 void liberar_arrecife(arrecife_t* arrecife){
     if((arrecife->pokemon) != NULL){
@@ -40,18 +41,45 @@ void liberar_acuario(acuario_t* acuario) {
     }
 }
 
-/*
+bool verificar_traslado(arrecife_t* arrecife, int pokes_total, int cant_seleccion, bool (*seleccionar_pokemon) (pokemon_t*)) {
+    int encontrados = 0;
+    for (int i = 0; i < pokes_total ; i++){
+        bool poke_cumple = seleccionar_pokemon(&arrecife->pokemon[i]);
+        if (poke_cumple && (encontrados < cant_seleccion)){
+            encontrados++;
+        }
+        if (encontrados == cant_seleccion){
+            printf("\nHay suficientes pokes para trasladar :)\n");
+            return true;  
+        }
+    }
+    if (encontrados != cant_seleccion) {
+        printf("\nNo hay suficientes pokemones para trasladar :(\n");
+            return false;
+    }
+    return false;
+}
+
 
 int trasladar_pokemon(arrecife_t* arrecife, acuario_t* acuario, bool (*seleccionar_pokemon) (pokemon_t*), int cant_seleccion) {
-    return 0; //si sale todo bien, sino -1
-
+     int pokes_total = arrecife->cantidad_pokemon;
+     if ((!arrecife) && (cant_seleccion != 0)) return -1;
+     if ((!arrecife) && (cant_seleccion == 0)) return 0;
+     if (cant_seleccion > pokes_total){
+         printf("\nBro no hay %d pokemones en el arrecife\n", cant_seleccion);
+         return -1;
+     }
+    bool hay_suficientes = verificar_traslado(arrecife, pokes_total, cant_seleccion, (*seleccionar_pokemon));
+    
+    
+    return hay_suficientes;
 }
-*/
+
 
 acuario_t* crear_acuario() {
     acuario_t* acuario = malloc(sizeof(acuario_t));
     if (!acuario) {
-        printf("ERROR de reserva de memoria.");
+        printf("\nERROR de reserva de memoria.\n");
         return NULL;
     }
     return acuario;
