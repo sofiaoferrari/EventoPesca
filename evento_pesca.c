@@ -66,19 +66,15 @@ void capturar_datos(pokemon_t* poke_agregado, pokemon_t* poke_datos){
     strcpy(poke_agregado->color, poke_datos->color);
 }
 
-bool verificar_traslado(arrecife_t* arrecife, int pokes_total, int cant_seleccion, bool (*seleccionar_pokemon)(pokemon_t*)) {
-    int encontrados = 0;
-    for (int i = 0; i < pokes_total ; i++){
-        bool poke_cumple = seleccionar_pokemon(&arrecife->pokemon[i]);
-        if (poke_cumple && (encontrados < cant_seleccion)){
-            lista[encontrados] += i;
-            printf("posicion poke %d: %d (%d)", encontrados+1,lista[encontrados],i);
-            encontrados++;
-        }
-        if (encontrados == cant_seleccion){
-            printf("\nHay suficientes pokes para trasladar :)\n");
-            return true;  
-        }
+bool verificar_traslado(pokemon_t* poke, int pokes_total, int cant_seleccion, bool (*seleccionar_pokemon)(pokemon_t*), int* encontrados) {
+    
+    bool poke_cumple = seleccionar_pokemon(&poke);
+    if (poke_cumple && (encontrados < cant_seleccion)){
+        *encontrados++;
+    }
+    if (encontrados == cant_seleccion){
+        printf("\nHay suficientes pokes para trasladar :)\n");
+        return true;  
     }
     if (encontrados != cant_seleccion) {
         printf("\nNo hay suficientes pokemones para trasladar :(\n");
@@ -87,16 +83,22 @@ bool verificar_traslado(arrecife_t* arrecife, int pokes_total, int cant_seleccio
     return false;
 }
 
-
 int trasladar_pokemon(arrecife_t* arrecife, acuario_t* acuario, bool (*seleccionar_pokemon) (pokemon_t*), int cant_seleccion) {
     int pokes_total = arrecife->cantidad_pokemon;
     
     int continuar = chequear_info_traslado(arrecife, cant_seleccion, pokes_total);
     if ((continuar == 0) || (continuar == -1)) 
         return continuar;
-    bool hay_suficientes = verificar_traslado(arrecife, pokes_total, cant_seleccion, (*seleccionar_pokemon));
-    if (hay_suficientes) return 0;
-    
+    int* encontrados = 0;
+    int pokes_a_trasladar[cant_seleccion];
+    for (int i = 0; i < pokes_total ; i++){
+        bool posicion = verificar_traslado(&arrecife->pokemon[i], pokes_total, cant_seleccion, (*seleccionar_pokemon), &encontrados);
+        if (encontrados > 0) {
+            pokes_a_trasladar[*encontrados-1] = i;
+            printf("");
+        }
+    }
+
     return 0;
 }
 
