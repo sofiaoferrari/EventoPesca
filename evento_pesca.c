@@ -24,6 +24,10 @@ void liberar_acuario(acuario_t* acuario) {
     }
 }
 
+int guardar_datos_acuario(acuario_t* acuario, const char* nombre_archivo);
+
+void censar_arrecife(arrecife_t* arrecife, void (*mostrar_pokemon)(pokemon_t*));
+
 int chequear_info_traslado(arrecife_t* arrecife, int cant_seleccion, int pokes_total) {
      if ((!arrecife) && (cant_seleccion != 0)) {
          return -1;
@@ -70,7 +74,7 @@ int trasladar_a_acuario(arrecife_t* arrecife, acuario_t* acuario, int cant_selec
         if (!aux_pokemon)
             return -1;
         acuario->pokemon = aux_pokemon;
-        acuario->cantidad_pokemon = (int)(i+1);
+        acuario->cantidad_pokemon += 1;
         capturar_datos(&(acuario->pokemon[i]), &arrecife->pokemon[posicion]);
     }
     int eliminar_poke = sacar_de_arrecife(arrecife, cant_seleccion, pokes_a_trasladar);
@@ -85,7 +89,6 @@ bool verificar_traslado(arrecife_t* arrecife, int cant_seleccion, bool (*selecci
         if (poke_cumple && (encontrados < cant_seleccion)){
             traslado[encontrados] = i;
             encontrados++;
-            printf("Poke %d posicion: %d", encontrados, traslado[encontrados-1]);
         }
         if (encontrados == cant_seleccion){
             printf("\nHay suficientes pokes para trasladar :)\n");
@@ -112,10 +115,10 @@ int trasladar_pokemon(arrecife_t* arrecife, acuario_t* acuario, bool (*seleccion
     bool hay_suficientes = verificar_traslado(arrecife, cant_seleccion, (*seleccionar_pokemon), pokes_a_trasladar);
     if (hay_suficientes != 0) {
         int cambiazo = trasladar_a_acuario(arrecife, acuario, cant_seleccion, pokes_a_trasladar);
-        if ((cambiazo == 0) && (acuario->cantidad_pokemon == cant_seleccion)){
+        if (cambiazo == 0){
             printf("\nEXITO! %d pokemones han sido trasladados al acuario!\n", cant_seleccion);
             printf("\nEl acuario contiene %d pokemones\n", acuario->cantidad_pokemon);
-        } else if ((acuario->cantidad_pokemon != cant_seleccion) || (cambiazo == -1)) {
+        } else if (cambiazo == -1) {
             printf("\nHubo un ERROR, los pokes no pudieron ser trasladados :(\n");
             free(pokes_a_trasladar);
             return -1;
@@ -133,6 +136,7 @@ acuario_t* crear_acuario() {
     if (!acuario)
         return NULL;
     acuario->pokemon = NULL;
+    acuario->cantidad_pokemon = 0;
     return acuario;
 }
 

@@ -5,7 +5,7 @@
 #define FOFOS 10
 #define PESO_MIN 30
 #define VELOCIDAD_MIN 40
-#define AZULES 8
+#define AZULES 5
 #define SQUIRTLES 2
 
 /*
@@ -13,6 +13,7 @@ bool exclusivos_shellder_y_(){
     return encontrado;
 }
 */
+
 bool vamo_a_calmarno(pokemon_t* poke){
     bool squirtle = strcmp(poke->especie, "squirtle");
     return !squirtle;
@@ -48,7 +49,7 @@ int main() {
     //Trasladar y listar pokes n-veces
     //Guardar los pokemon del acuario
     */
-    if (!traslado_1 && !traslado_2 && !traslado_3){
+    if ((!traslado_1) && (!traslado_2) && (!traslado_3)){
         printf("Se han podido realizar todos los traslados");
     }
     liberar_arrecife(simulacion_arrecife);
