@@ -24,9 +24,46 @@ void liberar_acuario(acuario_t* acuario) {
     }
 }
 
-int guardar_datos_acuario(acuario_t* acuario, const char* nombre_archivo);
+int leer_archivo(FILE* archivo, arrecife_t* arrecife){
+    size_t i = 0;
+    int campos = fscanf(archivo, FORMATO_ESCRITURA,
+                        nuevo_poke.especie,
+                        &nuevo_poke.peso,
+                        &nuevo_poke.velocidad,
+                        nuevo_poke.color);    
 
-void censar_arrecife(arrecife_t* arrecife, void (*mostrar_pokemon)(pokemon_t*));
+    while (campos == CANT_CAMPOS) {
+        i++;
+        campos = fscanf(archivo, FORMATO_LECTURA,
+                        nuevo_poke.especie,
+                        &nuevo_poke.peso,
+                        &nuevo_poke.velocidad,
+                        nuevo_poke.color);
+        
+    }
+    return 0;
+}
+
+int guardar_datos_acuario(acuario_t* acuario, const char* nombre_archivo){
+    FILE* archivo = fopen(nombre_archivo, "w");
+    if (!archivo){
+        printf("ERROR al crear el archivo %s.\n", nombre_archivo);
+        return -1;
+    }
+    int creacion = crear_archivo(archivo, acuario);
+    fclose(archivo);
+    return 0;
+}
+
+
+void censar_arrecife(arrecife_t* arrecife, void (*mostrar_pokemon)(pokemon_t*)){
+    if (arrecife) {
+        int pokes_total = arrecife->cantidad_pokemon;
+        for (int i = 0; i < pokes_total; i++){
+            mostrar_pokemon(&arrecife->pokemon[i]);
+        }
+    }
+}
 
 int chequear_info_traslado(arrecife_t* arrecife, int cant_seleccion, int pokes_total) {
      if ((!arrecife) && (cant_seleccion != 0)) {
@@ -143,7 +180,6 @@ acuario_t* crear_acuario() {
 
 int leer_archivo(FILE* archivo, arrecife_t* arrecife){
     pokemon_t nuevo_poke;
-
     size_t i = 0;
     int campos = fscanf(archivo, FORMATO_LECTURA,
                         nuevo_poke.especie,
@@ -167,7 +203,6 @@ int leer_archivo(FILE* archivo, arrecife_t* arrecife){
         
     }
     return 0;
-
 }
 
 arrecife_t* crear_arrecife(const char* ruta_archivo) {
@@ -181,7 +216,6 @@ arrecife_t* crear_arrecife(const char* ruta_archivo) {
     FILE* archivo = fopen(ruta_archivo, "r");
     if (!archivo){
         printf("ERROR de lectura del archivo %s.\n", ruta_archivo);
-        fclose(archivo);
         return NULL;
     }
 
