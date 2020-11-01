@@ -3,14 +3,14 @@
 #include <string.h>
 
 #define FORMATO_LECTURA "%100[^;];%i;%i;%50[^\n]\n"
-#define FORMATO_ESCRITURA "%12s;%12i;%12i;%12s\n"
+#define FORMATO_ESCRITURA "%s;%i;%i;%s\n"
 #define CANT_CAMPOS 4
 
 void liberar_arrecife(arrecife_t* arrecife){
-    if((arrecife->pokemon) != NULL){
+    if(((arrecife->pokemon) != NULL) && (arrecife->cantidad_pokemon > 0)){
         free(arrecife->pokemon);
     }
-    if (arrecife != NULL){
+    if ((arrecife != NULL) && (arrecife->cantidad_pokemon > 0)){
         free(arrecife);
     }
 }
@@ -24,22 +24,16 @@ void liberar_acuario(acuario_t* acuario) {
     }
 }
 
-int leer_archivo(FILE* archivo, arrecife_t* arrecife){
-    size_t i = 0;
-    int campos = fscanf(archivo, FORMATO_ESCRITURA,
-                        nuevo_poke.especie,
-                        &nuevo_poke.peso,
-                        &nuevo_poke.velocidad,
-                        nuevo_poke.color);    
-
-    while (campos == CANT_CAMPOS) {
+int crear_archivo(FILE* archivo, acuario_t* acuario){
+    int i = 0;  
+    int pokes_total = acuario->cantidad_pokemon;
+    while (i < pokes_total) {
+        fprintf(archivo, FORMATO_ESCRITURA,
+                (acuario->pokemon[i]).especie,
+                (acuario->pokemon[i]).peso,
+                (acuario->pokemon[i]).velocidad,
+                (acuario->pokemon[i]).color);
         i++;
-        campos = fscanf(archivo, FORMATO_LECTURA,
-                        nuevo_poke.especie,
-                        &nuevo_poke.peso,
-                        &nuevo_poke.velocidad,
-                        nuevo_poke.color);
-        
     }
     return 0;
 }
@@ -51,7 +45,10 @@ int guardar_datos_acuario(acuario_t* acuario, const char* nombre_archivo){
         return -1;
     }
     int creacion = crear_archivo(archivo, acuario);
-    fclose(archivo);
+    if (!creacion){
+        printf("\nEXITO! Se ha podido crear el archivo %s.\n",nombre_archivo);
+        fclose(archivo);
+    }
     return 0;
 }
 
