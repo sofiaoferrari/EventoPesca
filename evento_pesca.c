@@ -16,39 +16,38 @@ void liberar_arrecife(arrecife_t* arrecife){
 }
 
 void liberar_acuario(acuario_t* acuario) {
-    if((acuario->pokemon) != NULL){
+    if(((acuario->pokemon) != NULL) && (acuario->cantidad_pokemon > 0)){
         free(acuario->pokemon);
     }
-    if (acuario != NULL){
+    if ((acuario != NULL) && (acuario->cantidad_pokemon > 0)){
         free(acuario);
     }
 }
 
-int crear_archivo(FILE* archivo, acuario_t* acuario){
-    int i = 0;  
+void crear_archivo(FILE* archivo, acuario_t* acuario){
+    int i = 0;      
     int pokes_total = acuario->cantidad_pokemon;
+    printf("\n\nPOKES TOTAL %d\n\n", pokes_total);
     while (i < pokes_total) {
         fprintf(archivo, FORMATO_ESCRITURA,
-                (acuario->pokemon[i]).especie,
-                (acuario->pokemon[i]).peso,
-                (acuario->pokemon[i]).velocidad,
-                (acuario->pokemon[i]).color);
+                acuario->pokemon[i].especie,
+                acuario->pokemon[i].peso,
+                acuario->pokemon[i].velocidad,
+                acuario->pokemon[i].color);
         i++;
     }
-    return 0;
 }
 
 int guardar_datos_acuario(acuario_t* acuario, const char* nombre_archivo){
+    imprimir_acuario(acuario);
     FILE* archivo = fopen(nombre_archivo, "w");
     if (!archivo){
         printf("ERROR al crear el archivo %s.\n", nombre_archivo);
         return -1;
     }
-    int creacion = crear_archivo(archivo, acuario);
-    if (!creacion){
-        printf("\nEXITO! Se ha podido crear el archivo %s.\n",nombre_archivo);
-        fclose(archivo);
-    }
+    crear_archivo(archivo, acuario);
+    printf("\nEXITO! Se ha podido crear el archivo %s.\n",nombre_archivo);
+    fclose(archivo);
     return 0;
 }
 
@@ -56,9 +55,12 @@ int guardar_datos_acuario(acuario_t* acuario, const char* nombre_archivo){
 void censar_arrecife(arrecife_t* arrecife, void (*mostrar_pokemon)(pokemon_t*)){
     if (arrecife) {
         int pokes_total = arrecife->cantidad_pokemon;
-        for (int i = 0; i < pokes_total; i++){
+        int i = 0;
+        for (; i < pokes_total; i++) {
+            printf("\nPOKEMON %d",i);
             mostrar_pokemon(&arrecife->pokemon[i]);
         }
+        printf("\n\nHAY %d POKEMONES\n\n",i);
     }
 }
 
@@ -101,15 +103,14 @@ int sacar_de_arrecife(arrecife_t* arrecife, int cant_seleccion, int *pokes_a_tra
 }
 
 int trasladar_a_acuario(arrecife_t* arrecife, acuario_t* acuario, int cant_seleccion, int* pokes_a_trasladar){
-
-    for (size_t i = 0; i < cant_seleccion; i++){
+    for (int i = 0; i < cant_seleccion; i++){
         int posicion = pokes_a_trasladar[i];
-        pokemon_t* aux_pokemon = realloc(acuario->pokemon, sizeof(pokemon_t) * (i+1));
+        pokemon_t* aux_pokemon = realloc(acuario->pokemon, sizeof(pokemon_t) * (size_t)(arrecife->cantidad_pokemon+1));
         if (!aux_pokemon)
             return -1;
         acuario->pokemon = aux_pokemon;
+        acuario->pokemon[acuario->cantidad_pokemon] = arrecife->pokemon[posicion];
         acuario->cantidad_pokemon += 1;
-        capturar_datos(&(acuario->pokemon[i]), &arrecife->pokemon[posicion]);
     }
     int eliminar_poke = sacar_de_arrecife(arrecife, cant_seleccion, pokes_a_trasladar);
     return eliminar_poke;
@@ -147,7 +148,7 @@ int trasladar_pokemon(arrecife_t* arrecife, acuario_t* acuario, bool (*seleccion
     if (!pokes_a_trasladar)
         return -1;
     bool hay_suficientes = verificar_traslado(arrecife, cant_seleccion, (*seleccionar_pokemon), pokes_a_trasladar);
-    if (hay_suficientes != 0) {
+    if (hay_suficientes) {
         int cambiazo = trasladar_a_acuario(arrecife, acuario, cant_seleccion, pokes_a_trasladar);
         if (cambiazo == 0){
             printf("\nEXITO! %d pokemones han sido trasladados al acuario!\n", cant_seleccion);

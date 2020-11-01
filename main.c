@@ -15,8 +15,8 @@ bool exclusivos_shellder_y_(){
 */
 
 bool vamo_a_calmarno(pokemon_t* poke){
-    bool squirtle = strcmp(poke->especie, "squirtle");
-    return !squirtle;
+    bool squirtle = strcmp(poke->especie, "Squirtle");
+    return (!squirtle);
 }
 
 bool pokefofos(pokemon_t* poke){
@@ -52,6 +52,13 @@ printf("(_ ___)-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-
 printf("`-._.-'                                                                 `-._.-'");
 }
 */
+
+void mostrar(pokemon_t* pokemon){
+        printf("\nEspecie: %s  Color: %s", pokemon->especie, pokemon->color);
+        printf("\nPeso: %d  Velocidad: %d\n", pokemon->peso, pokemon->velocidad);
+
+}
+
 bool pokeveloz_azul(pokemon_t* poke){
     bool azul = strcmp(poke->color, "azul");
     bool veloz = (poke->velocidad >= VELOCIDAD_MIN);
@@ -66,11 +73,11 @@ int main() {
     arrecife_t* simulacion_arrecife = crear_arrecife(ARCHIVO); 
     acuario_t* simulacion_acuario = crear_acuario();
     int traslado_1 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,(*pokeveloz_azul),AZULES);
-    //void censar1 = censar_arrecife(simulacion_arrecife, (*mostrar));
+    censar_arrecife(simulacion_arrecife, (*mostrar));
     int traslado_2 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,(*pokefofos),FOFOS);
-    //void censar2 = censar_arrecife(simulacion_arrecife,(*mostrar));
+    censar_arrecife(simulacion_arrecife,(*mostrar));
     int traslado_3 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,(*vamo_a_calmarno),SQUIRTLES);
-    //void censar3 = censar_arrecife(simulacion_arrecife, (*mostrar));
+    censar_arrecife(simulacion_arrecife, (*mostrar));
     /*
     int traslado_4 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,pokefofos(simulacion_arrecife),45);
     int traslado_5 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,pokefofos(simulacion_arrecife),20);
