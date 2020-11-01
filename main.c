@@ -2,31 +2,34 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define FOFOS 20
-#define AZULES 5
+#define FOFOS 10
+#define PESO_MIN 30
+#define VELOCIDAD_MIN 40
+#define AZULES 8
+#define SQUIRTLES 2
 
 /*
 bool exclusivos_shellder_y_(){
     return encontrado;
 }
-
-bool pokeveloz_azul(){
-
-}
-
-bool pokefofos(arrecife_t* arrecife){
-    const short PESO_MIN = 
-    encontrado = false;
-    
-    return encontrado;
-}
 */
+bool vamo_a_calmarno(pokemon_t* poke){
+    bool squirtle = strcmp(poke->especie, "squirtle");
+    return !squirtle;
+}
 
-bool pokeveloz_azul(pokemon_t* poke_veloz){
-    bool azul = strcmp(poke_veloz->color, "azul");
-    bool fofo = (poke_veloz->peso <= FOFOS); 
+bool pokefofos(pokemon_t* poke){
 
-    return (!azul && !fofo);
+    bool fofo = (poke->peso >= PESO_MIN);
+    return fofo;
+}
+
+
+bool pokeveloz_azul(pokemon_t* poke){
+    bool azul = strcmp(poke->color, "azul");
+    bool veloz = (poke->velocidad >= VELOCIDAD_MIN);
+
+    return (!azul && veloz);
 }
 
 
@@ -35,20 +38,19 @@ int main() {
     arrecife_t* simulacion_arrecife = crear_arrecife(ARCHIVO); 
     acuario_t* simulacion_acuario = crear_acuario();
     int traslado_1 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,(*pokeveloz_azul),AZULES);
-    if (!traslado_1){
-        printf("se pudo realizar el primer traslado");
-    } else if (traslado_1 == 0){
-        printf("se pudo");
-    }
 
+    int traslado_2 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,(*pokefofos),FOFOS);
+
+    int traslado_3 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,(*vamo_a_calmarno),SQUIRTLES);
     /*
-    int traslado_2 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,pokefofos(simulacion_arrecife),4);
-    int traslado_3 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,pokefofos(simulacion_arrecife),30);
     int traslado_4 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,pokefofos(simulacion_arrecife),45);
     int traslado_5 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,pokefofos(simulacion_arrecife),20);
     //Trasladar y listar pokes n-veces
     //Guardar los pokemon del acuario
     */
+    if (!traslado_1 && !traslado_2 && !traslado_3){
+        printf("Se han podido realizar todos los traslados");
+    }
     liberar_arrecife(simulacion_arrecife);
     liberar_acuario(simulacion_acuario);
     

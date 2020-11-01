@@ -122,6 +122,7 @@ int trasladar_pokemon(arrecife_t* arrecife, acuario_t* acuario, bool (*seleccion
         } 
     }   
     printf("\n Quedan %d pokes en el arrecife\n", arrecife->cantidad_pokemon);
+    //printf("\n\nPokemon en la posision 297 que ya no existe: %s\n\n", arrecife->pokemon[296].especie);
     free(pokes_a_trasladar);
     return 0;
 }
