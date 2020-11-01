@@ -66,7 +66,6 @@ void capturar_datos(pokemon_t* poke_agregado, pokemon_t* poke_datos){
 
 int sacar_de_arrecife(arrecife_t* arrecife, int cant_seleccion, int *pokes_a_trasladar) {
     int eliminados = 0;
-    
     for (int j = 0; j < cant_seleccion; j++){
         for (int i = ((pokes_a_trasladar[j])-eliminados); i < (arrecife->cantidad_pokemon-1); i++){
             arrecife->pokemon[i] = arrecife->pokemon[i+1];
@@ -80,10 +79,7 @@ int sacar_de_arrecife(arrecife_t* arrecife, int cant_seleccion, int *pokes_a_tra
         arrecife->pokemon = eliminar_ultimo;
         arrecife->cantidad_pokemon -= 1;
     eliminados++;
-    printf("se elimina %i",eliminados);
     }
-    printf("\n%d pokemones han sido eliminados del arrecife!\n", eliminados);
-
     return 0;
 }
 
@@ -142,7 +138,8 @@ int trasladar_pokemon(arrecife_t* arrecife, acuario_t* acuario, bool (*seleccion
     if (hay_suficientes != 0) {
         int cambiazo = trasladar_a_acuario(arrecife, acuario, cant_seleccion, pokes_a_trasladar);
         if ((cambiazo == 0) && (acuario->cantidad_pokemon == cant_seleccion)){
-            printf("\nEXITO! El acuario contiene %d pokemones :)\n", acuario->cantidad_pokemon);
+            printf("\nEXITO! %d pokemones han sido trasladados al acuario!\n", cant_seleccion);
+            printf("\nEl acuario contiene %d pokemones :)\n", acuario->cantidad_pokemon);
         } else if (acuario->cantidad_pokemon != cant_seleccion) {
             printf("\nHubo un ERROR, los pokes no pudieron ser trasladados :(\n");
             free(pokes_a_trasladar);
@@ -151,8 +148,9 @@ int trasladar_pokemon(arrecife_t* arrecife, acuario_t* acuario, bool (*seleccion
             free(pokes_a_trasladar);
             return -1;
         }
-        printf("llegue hast aca cambiazo: %d", cambiazo);
-    }   printf("\n quedan %d pokes en el arrecife", arrecife->cantidad_pokemon);
+    }   
+    printf("posicion: %d,especie: %s", pokes_a_trasladar[1], arrecife->pokemon[299].especie);
+    printf("\n Quedan %d pokes en el arrecife\n", arrecife->cantidad_pokemon);
     free(pokes_a_trasladar);
     return 0;
 }
