@@ -293,8 +293,8 @@ Cleffa;38;46;dorado
 Combee;28;59;rojo
 Magnezone;24;79;naranja
 Grimer;6;65;plateado
-Ho-Oh;29;35;violeta
+Squirtle;29;35;violeta
 Meganium;20;70;verde
 Shelgon;21;65;bermellon
-Mewtwo;27;57;blanquirrojo
+Squirtle;27;57;blanquirrojo
 Salamence;18;28;rojo

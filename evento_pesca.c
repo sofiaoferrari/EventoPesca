@@ -35,7 +35,7 @@ int crear_archivo(FILE* archivo, acuario_t* acuario){
         return -1;
     int i = 0;      
     int pokes_total = acuario->cantidad_pokemon;
-    printf("\n\nPOKES TOTAL EN El ACUARIO %d\n", pokes_total);
+    printf("\n\nPOKES TOTAL EN El ACUARIO: %d\n", pokes_total);
     while (i < pokes_total) {
         fprintf(archivo, FORMATO_ESCRITURA,
                 acuario->pokemon[i].especie,
@@ -192,7 +192,7 @@ int trasladar_pokemon(arrecife_t* arrecife, acuario_t* acuario, bool (*seleccion
             return -1;
         } 
     }   
-    printf("\n Quedan %d pokes en el arrecife\n", arrecife->cantidad_pokemon);
+    printf("\n Quedan %d pokes en el arrecife:\n", arrecife->cantidad_pokemon);
     free(pokes_a_trasladar);
     return 0;
 }

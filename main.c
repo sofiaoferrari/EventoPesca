@@ -184,11 +184,13 @@ int main() {
     int traslado_5 = trasladar_pokemon(simulacion_arrecife,simulacion_acuario,(*exclusivos_shell),SHELLDERS);
     censar_arrecife(simulacion_arrecife, (*mostrar_5));
     if ((!traslado_1) && (!traslado_2) && (!traslado_3) && (!traslado_4) && (!traslado_5)){
-        printf("\nSe han podido realizar todos los traslados");
+        printf("\n\n\nSe han podido realizar todos los traslados :)");
+    } else {
+        printf("\n\n\nNo se han podido realizar todos los traslados :(");
     }
     int archivo_acuario = guardar_datos_acuario(simulacion_acuario, ACUARIO);
     if (!archivo_acuario){
-        printf("Se ha podido crear el archivo del acuario");
+        printf("\n\nYa esta lista la simulacion del acuario!");
     }
     liberar_arrecife(simulacion_arrecife);
     liberar_acuario(simulacion_acuario);
